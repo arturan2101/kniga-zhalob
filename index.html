@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Книга жалоб</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lobster&family=Caveat:wght@500;700&family=Rubik:wght@400;600;800&display=swap">
+<style>
+/* Layout: candy-colored complaints desk — mascot + title band, sticker-style form card, entries as wobbly notes with sticker verdicts */
+:root{
+  --bg:#ffe3f1; --dots:#ffc6e2; --card:#ffffff; --ink:#2b1a3d; --muted:#7a6390;
+  --pink:#ff4fa3; --lilac:#8b5cf6; --mint:#22c39a; --red:#ff5a5a; --sun:#ffd23f; --line:#f1cfe3;
+  --f-title:"Lobster","Georgia",cursive;
+  --f-hand:"Caveat","Comic Sans MS",cursive;
+  --f-ui:"Rubik",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#1f1230; --dots:#2b1a43; --card:#2a1c3d; --ink:#fbeaff; --muted:#bfa6d6;
+  --pink:#ff6fb6; --lilac:#a78bfa; --mint:#3ddbb1; --red:#ff7b7b; --sun:#ffd95e; --line:#40295a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#1f1230; --dots:#2b1a43; --card:#2a1c3d; --ink:#fbeaff; --muted:#bfa6d6;
+  --pink:#ff6fb6; --lilac:#a78bfa; --mint:#3ddbb1; --red:#ff7b7b; --sun:#ffd95e; --line:#40295a; color-scheme:dark}
+body{background:var(--bg) radial-gradient(var(--dots) 2px,transparent 2.5px) 0 0/22px 22px;color:var(--ink);font-family:var(--f-ui);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:720px;margin:0 auto;display:grid;gap:18px}
+header{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center}
+.mascot{width:clamp(92px,22vw,130px);height:auto;flex-shrink:0}
+@media (prefers-reduced-motion:no-preference){.mascot{animation:huff 2.6s ease-in-out infinite;transform-origin:50% 90%}}
+@keyframes huff{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) scale(1.03)}}
+.head{display:grid;gap:4px;min-width:0}
+.bubble{justify-self:start;background:var(--card);border:2.5px solid var(--ink);border-radius:16px;padding:6px 12px;font:700 20px/1.1 var(--f-hand);position:relative}
+.bubble::before{content:"";position:absolute;left:-10px;top:12px;border:8px solid transparent;border-right-color:var(--ink);border-left:0}
+h1{font-family:var(--f-title);font-weight:400;font-size:clamp(34px,8vw,54px);line-height:1;margin:0;color:var(--pink);
+  text-shadow:3px 3px 0 var(--ink);text-wrap:balance}
+.stats{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:600 13px var(--f-ui);background:var(--card);border:2px solid var(--ink);border-radius:999px;padding:4px 10px;font-variant-numeric:tabular-nums}
+.chip b{color:var(--pink)}
+.card{background:var(--card);border:3px solid var(--ink);border-radius:22px;box-shadow:6px 6px 0 var(--ink);padding:20px clamp(14px,4vw,26px)}
+form{display:grid;gap:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:520px){.row{grid-template-columns:1fr}}
+label{display:grid;gap:6px;font:800 12px var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--lilac);min-width:0}
+select,textarea,input[type=text]{font:600 22px/1.3 var(--f-hand);color:var(--ink);background:var(--bg);border:2px solid var(--ink);border-radius:14px;padding:8px 12px;width:100%}
+textarea{min-height:100px;resize:vertical}
+select option{background:var(--card);color:var(--ink)}
+:focus-visible{outline:3px solid var(--lilac);outline-offset:2px}
+.sev{display:flex;gap:8px;flex-wrap:wrap}
+.sev button{font:800 16px var(--f-ui);width:44px;height:44px;border-radius:50%;border:2.5px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer;transition:transform .12s}
+.sev button:hover{transform:translateY(-2px)}
+.sev button[aria-pressed="true"]{background:var(--red);color:#fff;transform:scale(1.12) rotate(-6deg)}
+.sevlabel{font:700 22px var(--f-hand);color:var(--red);text-transform:none;letter-spacing:0}
+.submit{justify-self:start;font:800 17px var(--f-ui);background:var(--pink);color:#fff;border:3px solid var(--ink);border-radius:999px;
+  padding:12px 22px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+.submit:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.submit:disabled{opacity:.5;cursor:default}
+.note{font:700 20px var(--f-hand);color:var(--lilac);min-height:1em}
+h2{font-family:var(--f-title);font-weight:400;font-size:30px;margin:6px 0 0;color:var(--lilac)}
+ol{list-style:none;margin:0;padding:0;display:grid;gap:16px}
+.entry{background:var(--card);border:2.5px solid var(--ink);border-radius:18px;padding:16px 16px 14px;display:grid;gap:6px;position:relative}
+.entry:nth-child(odd){transform:rotate(-.6deg)} .entry:nth-child(even){transform:rotate(.5deg)}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;font:600 12px var(--f-ui);color:var(--muted);font-variant-numeric:tabular-nums;padding-right:118px}
+.meta .num{color:var(--ink);font-weight:800}
+.tag{background:var(--sun);color:#2b1a3d;border-radius:6px;padding:0 6px}
+.text{font:600 25px/1.25 var(--f-hand);white-space:pre-wrap;overflow-wrap:anywhere}
+.demand{font:600 13px var(--f-ui);display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.demand span{font:700 21px var(--f-hand);color:var(--pink)}
+.dots{display:inline-flex;gap:3px}
+.dots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--red);display:inline-block}
+.dots i.on{background:var(--red)}
+.sticker{position:absolute;top:-12px;right:10px;font:800 12px/1.1 var(--f-ui);text-align:center;color:#fff;border:2.5px solid var(--ink);
+  border-radius:999px;padding:7px 12px;transform:rotate(7deg);box-shadow:2px 2px 0 var(--ink);max-width:110px}
+.sticker.pending{background:var(--lilac)} .sticker.ok{background:var(--mint)} .sticker.no{background:var(--red)}
+.reply{font:600 13px var(--f-ui);background:var(--bg);border-radius:12px;padding:6px 10px;margin-top:4px}
+.reply i{font:700 21px var(--f-hand);font-style:normal;color:var(--ink)}
+.admin{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:6px}
+.admin button{font:700 12px var(--f-ui);background:var(--card);color:var(--ink);border:2px solid var(--ink);border-radius:999px;padding:5px 11px;cursor:pointer}
+.admin button[data-act="ok"]{background:var(--mint);color:#fff}
+.admin button[data-act="no"]{background:var(--red);color:#fff}
+.admin input{font-size:19px;flex:1 1 200px;min-width:0;padding:5px 10px}
+.empty{padding:22px;text-align:center;color:var(--muted);font:600 14px var(--f-ui);display:grid;gap:4px;border:2.5px dashed var(--muted);border-radius:18px}
+.empty b{font:700 28px var(--f-hand);color:var(--ink)}
+footer{font:600 12px var(--f-ui);color:var(--muted);text-align:center}
+@media (prefers-reduced-motion:no-preference){.entry.fresh .sticker{animation:slap .4s cubic-bezier(.3,1.6,.5,1)}}
+@keyframes slap{from{transform:rotate(30deg) scale(2);opacity:0}to{transform:rotate(7deg) scale(1);opacity:1}}
+
+.linkbtn{font:600 12px var(--f-ui);background:none;border:0;color:var(--muted);text-decoration:underline;cursor:pointer;margin-top:6px}
+#uidBox{display:block;font:600 12px ui-monospace,monospace;color:var(--ink);overflow-wrap:anywhere;margin-top:4px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <svg class="mascot" viewBox="0 0 126 130" aria-hidden="true">
+      <ellipse cx="60" cy="122" rx="38" ry="6" fill="var(--dots)"/>
+      <path d="M98 108 Q122 96 112 70 Q108 60 114 52" fill="none" stroke="var(--ink)" stroke-width="13" stroke-linecap="round"/>
+      <path d="M98 108 Q122 96 112 70 Q108 60 114 52" fill="none" stroke="#1d1626" stroke-width="8" stroke-linecap="round"/>
+      <path d="M22 44 L26 6 L52 30 Z" fill="#1d1626" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M98 44 L94 6 L68 30 Z" fill="#1d1626" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M29 34 L30 17 L42 29 Z" fill="#ff8fab"/><path d="M91 34 L90 17 L78 29 Z" fill="#ff8fab"/>
+      <ellipse cx="60" cy="74" rx="46" ry="46" fill="#1d1626" stroke="var(--ink)" stroke-width="3"/>
+      <ellipse cx="44" cy="62" rx="10" ry="9" fill="#c6f04a"/><ellipse cx="76" cy="62" rx="10" ry="9" fill="#c6f04a"/>
+      <ellipse cx="44" cy="63" rx="2.6" ry="7" fill="#1d1626"/><ellipse cx="76" cy="63" rx="2.6" ry="7" fill="#1d1626"/>
+      <path d="M31 50 L53 57" stroke="#1d1626" stroke-width="7" stroke-linecap="round"/>
+      <path d="M89 50 L67 57" stroke="#1d1626" stroke-width="7" stroke-linecap="round"/>
+      <path d="M32 49 L52 55" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M88 49 L68 55" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M56 74 L64 74 L60 79 Z" fill="#ff8fab"/>
+      <path d="M52 86 Q56 82 60 85 Q64 82 68 86" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M14 72 L38 76 M14 82 L38 81 M106 72 L82 76 M106 82 L82 81" stroke="#ffffff" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
+      <rect x="60" y="90" width="34" height="30" rx="4" fill="#fff" stroke="var(--ink)" stroke-width="3" transform="rotate(-10 77 105)"/>
+      <path d="M66 100 h20 M66 107 h16 M66 114 h18" stroke="#8b5cf6" stroke-width="2.5" transform="rotate(-10 77 105)"/>
+      <ellipse cx="60" cy="106" rx="9" ry="7" fill="#1d1626" stroke="var(--ink)" stroke-width="3"/>
+    </svg>
+    <div class="head">
+      <div class="bubble">Слушаю. Кто опять провинился?</div>
+      <h1>Книга жалоб</h1>
+      <div class="stats"><span class="chip">Подано: <b id="sTotal">0</b></span><span class="chip">Прощено: <b id="sOk">0</b></span><span class="chip">Ждут: <b id="sWait">0</b></span></div>
+    </div>
+  </header>
+
+  <section class="card">
+    <form id="f" autocomplete="off">
+      <div class="row">
+        <label for="cat">Что он натворил
+          <select id="cat">
+            <option>Недостаточно обнимашек</option>
+            <option>Долго отвечал на сообщение</option>
+            <option>Съел мою еду</option>
+            <option>Не заметил новую причёску</option>
+            <option>Играл вместо меня</option>
+            <option>Забрал одеяло</option>
+            <option>Спорил и был неправ</option>
+            <option>Прочее</option>
+          </select>
+        </label>
+        <label for="want">Компенсация
+          <select id="want">
+            <option>Обнимашки (×10)</option>
+            <option>Шоколадка</option>
+            <option>Свидание</option>
+            <option>Массаж спины</option>
+            <option>Признание вины вслух</option>
+            <option>Цветы</option>
+            <option>Я сама решу</option>
+          </select>
+        </label>
+      </div>
+      <label for="txt">Подробности преступления
+        <textarea id="txt" maxlength="600" placeholder="Рассказывай всё как было…"></textarea>
+      </label>
+      <label>Уровень обиды: <span class="sevlabel" id="sevName">заметно обижена</span>
+        <div class="sev" id="sev" role="group" aria-label="Уровень обиды"></div>
+      </label>
+      <button class="submit" id="go" type="submit">Пожаловаться!</button>
+      <div class="note" id="note" aria-live="polite"></div>
+    </form>
+  </section>
+
+  <h2>Дело №…</h2>
+  <ol id="list">
+    <li class="empty"><b>Жалоб пока нет.</b>Кот скучает. Напиши первую жалобу выше.</li>
+  </ol>
+  <footer>Решения кота-администратора окончательны и обжалованию не подлежат.<br><button type="button" id="adminBtn" class="linkbtn">Вход для администрации</button><span id="uidBox"></span></footer>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
