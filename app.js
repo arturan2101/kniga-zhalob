@@ -13,7 +13,7 @@ const firebaseConfig = {
 };
 
 // 2) Твой UID (появится внизу страницы после входа). Тот же UID впиши в firestore.rules
-const ADMIN_UID = "PASTE_YOUR_UID";
+const ADMIN_UID = "dpHDUU57LvNO2fv49RNoYqeRZi72";
 
 const SEV = ["слегка надулась","заметно обижена","серьёзно обижена","молчит и смотрит","ТЫ ЗНАЕШЬ, ЧТО СДЕЛАЛ"];
 const STATUS = { pending:"на рассмотрении", ok:"прощён", no:"не прощён" };
